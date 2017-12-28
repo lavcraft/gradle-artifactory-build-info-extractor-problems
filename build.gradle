@@ -46,7 +46,7 @@ artifactory {
         publishConfigs('archives')
         publishIvy = false
         properties {
-          nebula '*:*:*:*@*', 'want_to_add':'but not'
+          nebula '*:*:*:*@*', 'want_to_add':'but not' // add only to *.pom artifacts. Why?
           mavenJava commonProperties, '*:*:*:*@*'
         }
       }
