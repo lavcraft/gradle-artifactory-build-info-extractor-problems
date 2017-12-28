@@ -1,0 +1,6 @@
+artifactoryPublish {
+  properties = ['aa':'aaa'] // works only for simple use cases
+  properties {
+    nebula '*:*:*:*@*', 'not_added_prop':'sub1'
+  }
+}

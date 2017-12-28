@@ -1,0 +1,54 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.5.4"
+  }
+}
+
+allprojects {
+  group = 'ru.alfalab.platform.tests'
+  version = '0.1.1-SNAPSHOT'
+
+  apply plugin: 'maven-publish'
+  apply plugin: 'com.jfrog.artifactory'
+
+}
+
+subprojects {
+  apply plugin: 'java'
+
+  publishing {
+    publications {
+      nebula(MavenPublication) {
+        from project.components.java
+      }
+    }
+  }
+
+}
+
+def commonProperties = [testprop:'myprop']
+artifactory {
+  contextUrl = project.findProperty('artifactory_contextUrl')
+  publish {
+      repository {
+        repoKey = 'libs-snapshot-local'
+        username = project.findProperty('artifactory_user')
+        password = project.findProperty('artifactory_password')
+      }
+
+      defaults {
+        publications('nebula')
+        publishConfigs('archives')
+        publishIvy = false
+        properties {
+          nebula '*:*:*:*@*', 'want_to_add':'but not'
+          mavenJava commonProperties, '*:*:*:*@*'
+        }
+      }
+    }
+ }
